@@ -1,3 +1,5 @@
+var url = Environment.GetEnvironmentVariable("DATABASE_URL");
+Console.WriteLine($"la coneccion es {url}");
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -9,6 +11,11 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+using (var scope  = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<EjemploRailwayNube>();
+    db.Database.Migrate();
+}
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
